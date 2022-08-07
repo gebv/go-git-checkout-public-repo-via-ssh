@@ -38,3 +38,18 @@ ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publ
 For *public* repo git checkout from anywhere only via https-transport
 
 case 5: via https
+
+# check auth via ssh
+
+```bash
+$ ssh-add -L | grep "ssh-rsa" | wc -l
+       1
+$ ssh -T git@github.com
+Hi gebv! You've successfully authenticated, but GitHub does not provide shell access.
+$ ssh-add -D
+All identities removed.
+$ ssh-add -L | grep "ssh-rsa" | wc -l
+       0
+$ ssh -T git@github.com
+git@github.com: Permission denied (publickey).
+```
