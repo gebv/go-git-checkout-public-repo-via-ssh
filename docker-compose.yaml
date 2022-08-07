@@ -1,0 +1,37 @@
+version: '2.4'
+services:
+  canonical:
+    container_name: canonical
+    build:
+      context: .
+      target: 'configured-env'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        eval `ssh-agent`
+        ssh-add ~/.ssh/id_rsa
+        cd /tmp
+        ssh -T git@github.com
+        git clone git@github.com:gebv/tmp.git
+        ls -lha ./tmp
+        git clone https://github.com/gebv/tmp.git
+        ls -lha ./tmp
+  try-checkout-via-ssh:
+    container_name: try-checkout-via-ssh
+    build:
+      context: .
+      target: 'try-checkout-via-ssh'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        eval `ssh-agent`
+        ssh-add ~/.ssh/id_rsa
+        /app.bin --case 1
+        /app.bin --case 2
+        /app.bin --case 3
+        /app.bin --case 4
+        /app.bin --case 5
+    environment:
+      GORACE: 'halt_on_error=1'
